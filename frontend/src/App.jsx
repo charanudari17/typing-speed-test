@@ -65,10 +65,13 @@ function App() {
     if (!startTime) {
       setStartTime(new Date());
     }
+      
+    if ((value.trim()) === sampleText.trim()) {
+      // console.log(value.trim()+"->>>>>")
+      // console.log(sampleText.trim()+"->>>>>")
 
-    if (value.trim() === sampleText.trim()) {
       const endTime = new Date();
-
+     
       const timeTaken = (endTime - startTime) / 1000 / 60;
 
       const words = sampleText.split(" ").length;
@@ -76,9 +79,10 @@ function App() {
       const wpm = Math.round(words / timeTaken);
 
       let correctChars = 0;
-
-      for (let i = 0; i < value.length; i++) {
-        if (value[i] === sampleText[i]) {
+       const input_value=value.trim();
+       console.log(input_value+"->>")
+      for (let i = 0; i < input_value.length; i++) {
+        if (input_value[i] === sampleText[i]) {
           correctChars++;
         }
       }
@@ -101,7 +105,7 @@ function App() {
 
   const handleStart = () => {
     const randomIndex = Math.floor(Math.random() * sampleTexts.length);
-   setSampleText(sampleTexts[randomIndex]);
+   setSampleText(sampleTexts[randomIndex].trim());
     setInput("");
     setResult("");
     setStartTime(null);
