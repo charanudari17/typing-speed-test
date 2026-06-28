@@ -17,7 +17,8 @@ function App() {
 
   // Get dynamic backend domain
   // const backendDomain = getBackendDomain();
-  const backendDomain = "http://localhost:8080";
+  const backendDomain = "https://render.com/docs/web-services#port-binding"; // Replace with your backend domain
+  
 
   // Function to fetch leaderboard from backend
   const fetchLeaderboard = async () => {

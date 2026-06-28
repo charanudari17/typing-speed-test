@@ -67,6 +67,8 @@ app.get("/leaderboard", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch leaderboard" });
   }
 });
+const PORT = process.env.PORT || 8080;
 
-const PORT = 8080;
-app.listen(PORT, () => console.log(`🚀 Backend running on Port Number ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Backend running on Port Number ${PORT}`);
+});
