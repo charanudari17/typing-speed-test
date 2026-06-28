@@ -21,7 +21,9 @@ const Score = mongoose.model("Score", new mongoose.Schema({
   name: String,
   wpm: Number
 }));
-
+app.get("/", (req, res) => {
+  res.send("🚀 Typing Speed Test Backend is Running!");
+});
 // Complete the endpoint to save new score
 app.post("/score", async (req, res) => {
   try {

@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
 
-// ------------ Function to determine backend domain dynamically ------------
-// You don't need to understand this function, it's just a helper function to get the backend domain
-
-// ---------------------------------------------------------------------------
-
 function App() {
   const [input, setInput] = useState("");
   const [startTime, setStartTime] = useState(null);
@@ -15,61 +10,82 @@ function App() {
 
   const sampleText = "The quick brown fox jumps over the lazy dog";
 
-  // Get dynamic backend domain
-  // const backendDomain = getBackendDomain();
-  const backendDomain = "https://render.com/docs/web-services#port-binding"; // Replace with your backend domain
-  
+  // Backend URL
+  const backendDomain = import.meta.env.VITE_BACKEND_URL;
 
-  // Function to fetch leaderboard from backend
+  // Fetch leaderboard
   const fetchLeaderboard = async () => {
-    const res = await fetch(`${backendDomain}/leaderboard`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
-    setLeaderboard(data.leaderboard || data);
+    try {
+      console.log("Backend:", backendDomain);
+
+      const res = await fetch(`${backendDomain}/leaderboard`);
+
+      const data = await res.json();
+
+      console.log("Leaderboard:", data);
+
+      setLeaderboard(data.leaderboard || []);
+    } catch (err) {
+      console.error("Leaderboard Error:", err);
+    }
   };
 
-  // Function to save score to backend
+  // Save score
   const saveScore = async (name, wpm) => {
-    await fetch(`${backendDomain}/score`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, wpm }),
-    });
+    try {
+      await fetch(`${backendDomain}/score`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, wpm }),
+      });
+    } catch (err) {
+      console.error("Save Error:", err);
+    }
   };
 
   const handleInput = async (e) => {
     const value = e.target.value;
     setInput(value);
 
-    if (!startTime) setStartTime(new Date());
+    if (!startTime) {
+      setStartTime(new Date());
+    }
 
     if (value.trim() === sampleText.trim()) {
       const endTime = new Date();
+
       const timeTaken = (endTime - startTime) / 1000 / 60;
+
       const words = sampleText.split(" ").length;
+
       const wpm = Math.round(words / timeTaken);
 
       let correctChars = 0;
+
       for (let i = 0; i < value.length; i++) {
-        if (value[i] === sampleText[i]) correctChars++;
+        if (value[i] === sampleText[i]) {
+          correctChars++;
+        }
       }
-      const accuracy = Math.round((correctChars / sampleText.length) * 100);
 
-      setResult(`🎉 ${name}, you typed at ${wpm} WPM with ${accuracy}% accuracy!`);
+      const accuracy = Math.round(
+        (correctChars / sampleText.length) * 100
+      );
 
-      // Save score to backend
+      setResult(
+        `🎉 ${name}, you typed at ${wpm} WPM with ${accuracy}% accuracy!`
+      );
+
       await saveScore(name, wpm);
 
-      // Refresh leaderboard
-      fetchLeaderboard();
-      
-      setIsStarted(false); // stop after completion
+      await fetchLeaderboard();
+
+      setIsStarted(false);
     }
   };
 
-  // Start button handler
   const handleStart = () => {
     setInput("");
     setResult("");
@@ -77,7 +93,6 @@ function App() {
     setIsStarted(true);
   };
 
-  // Fetch leaderboard on component mount
   useEffect(() => {
     fetchLeaderboard();
   }, []);
@@ -85,6 +100,7 @@ function App() {
   return (
     <div style={{ textAlign: "center", marginTop: "30px" }}>
       <h1>Typing Speed Test</h1>
+
       <p>{sampleText}</p>
 
       <input
@@ -104,33 +120,36 @@ function App() {
 
       <button
         onClick={handleStart}
+        disabled={!name}
         style={{
           padding: "10px 20px",
           fontSize: "16px",
           marginBottom: "15px",
           cursor: "pointer",
         }}
-
-        // require name before starting
-        disabled={!name} 
       >
-      Start Test
+        Start Test
       </button>
-      
+
       <br />
 
       <input
         type="text"
         value={input}
         onChange={handleInput}
-        style={{ width: "80%", padding: "10px", fontSize: "16px" }}
-        placeholder="Start typing here..."
         disabled={!isStarted}
+        placeholder="Start typing here..."
+        style={{
+          width: "80%",
+          padding: "10px",
+          fontSize: "16px",
+        }}
       />
 
       <p>{result}</p>
 
       <h2>🏆 Leaderboard</h2>
+
       <ul>
         {leaderboard.map((score, index) => (
           <li key={index}>
@@ -143,4 +162,3 @@ function App() {
 }
 
 export default App;
-
