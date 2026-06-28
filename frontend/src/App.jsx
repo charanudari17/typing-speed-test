@@ -7,8 +7,21 @@ function App() {
   const [name, setName] = useState("");
   const [leaderboard, setLeaderboard] = useState([]);
   const [isStarted, setIsStarted] = useState(false);
+  const [sampleText, setSampleText] = useState("");
 
-  const sampleText = "The quick brown fox jumps over the lazy dog";
+  // const sampleText = "The quick brown fox jumps over the lazy dog";
+  const sampleTexts = [
+  "The quick brown fox jumps over the lazy dog.",
+  "Practice makes a person perfect every single day.",
+  "JavaScript is one of the most popular programming languages.",
+  "Learning React becomes easier with consistent practice.",
+  "Artificial intelligence is transforming the future of technology.",
+  "Never stop learning because life never stops teaching.",
+  "Programming improves logical thinking and problem solving skills.",
+  "Hard work and consistency always beat natural talent.",
+  "Small daily improvements lead to remarkable long term success.",
+  "Every expert was once a beginner who never gave up."
+];
 
   // Backend URL
   const backendDomain = import.meta.env.VITE_BACKEND_URL;
@@ -87,6 +100,8 @@ function App() {
   };
 
   const handleStart = () => {
+    const randomIndex = Math.floor(Math.random() * sampleTexts.length);
+   setSampleText(sampleTexts[randomIndex]);
     setInput("");
     setResult("");
     setStartTime(null);
