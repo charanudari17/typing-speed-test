@@ -120,7 +120,6 @@ function App() {
     <div style={{ textAlign: "center", marginTop: "30px" }}>
       <h1>Typing Speed Test</h1>
 
-      <p>{sampleText}</p>
 
       <input
         type="text"
@@ -151,6 +150,9 @@ function App() {
       </button>
 
       <br />
+      <h1>
+ <p>{sampleText}</p>
+      </h1>
 
       <input
         type="text"
